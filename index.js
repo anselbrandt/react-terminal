@@ -34,21 +34,29 @@ const React = (function () {
 function Component() {
   const [i, setI] = React.useState(0);
   const [j, setJ] = React.useState(0);
+  const [time, setTime] = React.useState(new Date().toLocaleTimeString());
 
   // React.useEffect(() => {
-  //   // effect
-  // }, []);
+  //   setInterval(() => {
+  //     setTime(new Date().toLocaleTimeString());
+  //   }, 1000);
+  // });
 
   return {
     render: () => {
+      process.stdout.cursorTo(0, 5);
       process.stdout.clearLine();
-      process.stdout.cursorTo(0);
-      process.stdout.write(`${i} ${j}`);
+      process.stdout.write(`${i} ${j}
+${time}`);
     },
     incrI: () => setI(i + 1),
-    decrI: () => setI(i - 1),
+    decrI: () => {
+      if (i > 0) setI(i - 1);
+    },
     incrJ: () => setJ(j + 1),
-    decrJ: () => setJ(j - 1),
+    decrJ: () => {
+      if (j > 0) setJ(j - 1);
+    },
   };
 }
 
@@ -63,6 +71,7 @@ if (process.stdin.isTTY) process.stdin.setRawMode(true);
 console.log("\nPress 'q' to quit\nup, down, left right to inc/decr i,j\n");
 
 React.render(Component);
+setInterval(() => React.render(Component), 1000);
 
 process.stdin.on("keypress", (chunk, key) => {
   var App = React.render(Component);
